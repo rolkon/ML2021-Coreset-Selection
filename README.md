@@ -2,6 +2,10 @@
 
 This repository contains the source code of the Skoltech ML2021 course project "Coreset Selection".
 
+## Pulling this repository
+
+This repository stores data in the Git LFS format. You need to have Git LFS installed on your computer in order to pull this repository successfully.
+
 ## Documentation
 The documentation can be found here:
 
