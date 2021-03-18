@@ -115,20 +115,16 @@ class GlisterOnlineImage():
             if batch_idx == 0:
                 x_val = inputs
                 y_val = targets
-                x_val_new = inputs.reshape(val_batch_size, -1)
             else:
                 x_val = torch.cat([x_val, inputs], dim=0)
                 y_val = torch.cat([y_val, targets], dim=0)
-                x_val_new = torch.cat([x_val_new, inputs.reshape(val_batch_size, -1)], dim=0) # HERE
         for batch_idx, (inputs, targets) in enumerate(testloader):
             if batch_idx == 0:
                 x_tst = inputs
                 y_tst = targets
-                x_tst_new = inputs.view(tst_batch_size, -1)
             else:
                 x_tst = torch.cat([x_tst, inputs], dim=0)
                 y_tst = torch.cat([y_tst, targets], dim=0)
-                x_tst_new = torch.cat([x_tst_new, inputs.reshape(tst_batch_size, -1)], dim=0)
                 
         self.x_trn = x_trn
         self.y_trn = y_trn
