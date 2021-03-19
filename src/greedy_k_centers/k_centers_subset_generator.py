@@ -30,20 +30,22 @@ def generate_subset_indices(dataset_type='fullset', frac_of_full_set=0.5):
     else:
         print("generate_subset_indices: dataset type error: You have to choose either 'fullset' or 'subset'.")
         
-    print(len(datapoints))
-
+    
     budget = int(np.round(len(datapoints) * frac_of_full_set))
 
     seedsize = 1000
     seed = np.random.permutation(np.arange(0, len(datapoints)))[:seedsize]
     
-    print(budget)
+    print("Generating ", budget, "indices...")
 
     # k-centers adds |budget| new points to the indices list, so we subtract the seeds
-    #budget -= seedsize
+    budget -= seedsize
 
-    #indices = k_center_greedy(datapoints, seed, budget)
+    indices = k_center_greedy(datapoints, seed, budget)
 
-    #indices = np.concatenate((indices, seed))
+    indices = np.concatenate((indices, seed))
 
-    #np.savetxt('k_centers_indices.csv', indices, delimiter=',')
+    filename = 'k_centers_indices.csv'
+    
+    print("Saving ", filename, "...")
+    np.savetxt('k_centers_indices.csv', indices, delimiter=',')
