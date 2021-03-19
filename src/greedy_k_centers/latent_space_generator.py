@@ -58,4 +58,4 @@ def generate_latent_space(dataset_type='fullset'):
     filename = 'CIFAR10_latent_data_{}.csv'.format(dataset_type)
     print("Saving ", filename, "...")
     latent_data = np.array(latent_data)
-    np.savetxt(filename, latent_data, delimeter=',')
+    np.savetxt(filename, latent_data, delimiter=',')
