@@ -9,7 +9,7 @@ import numpy as np
 import dataset_manager
 from tqdm import tqdm
 
-def generate_latent_space(dataset_type=='fullset'):
+def generate_latent_space(dataset_type='fullset'):
     """ Generates the latent space of CIFAR10 using the last hidden layer of a trained ResNet.
     Keyword arguments:
     dataset_type -- Either 'fullset' to generate latent space on full dataset, or 'subset' to generate latent space on subset of 20000
@@ -39,17 +39,23 @@ def generate_latent_space(dataset_type=='fullset'):
         return
 
     device = torch.device('cuda:1' if torch.cuda.is_available() else 'cpu')
+    
+    if device == 'cpu':
+        print("Warning: We did not detect a CUDA core. This could take a while.")
 
     net = resnet18(pretrained=True)
 
     #transform all datapoints to a latent representation
     latent_data = []
 
+    print("Generating latent space...")
     with tqdm(total=len(train_dataset)) as pbar:
         for i in range(len(train_dataset)):
             datapoint = train_dataset[i][0].reshape(1, 3, 32, 32)
             latent_data.append(net.encode(datapoint).detach().numpy()[0])
             pbar.update(1)
 
+    filename = 'CIFAR10_latent_data_{}.csv'.format(dataset_type)
+    print("Saving ", filename, "...")
     latent_data = np.array(latent_data)
-    np.savetxt('CIFAR10_latent_data_{}.csv'.format(dataset_type), latent_data, delimeter=',')
+    np.savetxt(filename, latent_data, delimeter=',')
