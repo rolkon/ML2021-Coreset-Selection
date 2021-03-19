@@ -4,7 +4,7 @@ import os
 
 
 # returns full CIFAR10-dataset
-def CIFAR10_Full(path ,train=True, transform=None, target_transform=None):
+def CIFAR10_full(path ,train=True, transform=None, target_transform=None):
     """Returns the torch CIFAR10 dataset.
     
     Keyword arguments:
@@ -13,8 +13,8 @@ def CIFAR10_Full(path ,train=True, transform=None, target_transform=None):
     
     For the path, it's easiest if you use module.__file__, as can be seen in this example:
     
-    import dataset_manager
-    dataset = dataset_manager.CIFAR10_Subset(dataset_manager.__file__)
+    >>> import dataset_manager
+    >>> dataset = dataset_manager.CIFAR10_Subset(dataset_manager.__file__)
     
     """
     directory = os.path.dirname(path)
@@ -22,7 +22,7 @@ def CIFAR10_Full(path ,train=True, transform=None, target_transform=None):
     
     return dataset
 
-def CIFAR10_Subset(path, size=20000, transform=None, target_transform=None):
+def CIFAR10_subset(path, size=20000, transform=None, target_transform=None):
     """Returns subset of <size> uniformly distributed samples from the torch CIFAR10 training set.
     
     Keyword arguments:
@@ -32,8 +32,8 @@ def CIFAR10_Subset(path, size=20000, transform=None, target_transform=None):
     
     For the path, it's easiest if you use module.__file__, as can be seen in this example:
     
-    import dataset_manager
-    dataset = dataset_manager.CIFAR10_Subset(dataset_manager.__file__)
+    >>> import dataset_manager
+    >>> dataset = dataset_manager.CIFAR10_Subset(dataset_manager.__file__)
     
     """
     dataset = CIFAR10_Full(path, train=True, transform=transform, target_transform=target_transform)
@@ -43,3 +43,15 @@ def CIFAR10_Subset(path, size=20000, transform=None, target_transform=None):
     train_indices = np.random.permutation(np.arange(0, len(dataset)))[:size]
     
     return [dataset[i] for i in train_indices]
+
+def CIFAR10_subset_indices(size=20000):
+    """Returns indices of subset of <size> uniformally distributed samples from the torch CIFAR10 training set.
+
+    Keyword arguments:
+    size -- size of the subset. 20000 by default.
+
+    """
+    np.random.seed(0)
+    indices = np.random.permutation(np.arange(0, 50000))[:size]
+
+    return indices
