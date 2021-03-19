@@ -14,10 +14,9 @@ import torchvision
 import torch.nn.functional as F
 
 # Custom classes
-from set_function import SetFunction
-from mnist_net import MnistNet
+from .set_function_image import SetFunctionImage
 
-class GlisterOnline():
+class GlisterOnlineImage():
     
     def __init__(self, fullset = None, valset = None, testset = None, 
                  device = 'cpu', validation_set_fraction = 0.1,
@@ -97,10 +96,11 @@ class GlisterOnline():
         
         # Transform to tensors
         trainset_idxs = np.array(trainset.indices)
-        batch_wise_indices = list(BatchSampler(SequentialSampler(trainset_idxs), 1000, drop_last=False))
+        batch_wise_indices = list(BatchSampler(SequentialSampler(trainset_idxs), trn_batch_size, drop_last=False))
         cnt = 0
         for batch_idx in batch_wise_indices:
-            inputs = torch.cat([fullset[x][0].reshape(1, -1) for x in batch_idx], dim=0).type(torch.float)
+            # HERE
+            inputs = torch.cat([fullset[x][0].reshape(-1, self.n_channels, self.fullset[x][0].shape[1], self.fullset[x][0].shape[2]) for x in batch_idx], dim=0).type(torch.float)
             targets = torch.tensor([fullset[x][1] for x in batch_idx])
             if cnt == 0:
                 x_trn = inputs
@@ -115,20 +115,16 @@ class GlisterOnline():
             if batch_idx == 0:
                 x_val = inputs
                 y_val = targets
-                x_val_new = inputs.reshape(val_batch_size, -1)
             else:
                 x_val = torch.cat([x_val, inputs], dim=0)
                 y_val = torch.cat([y_val, targets], dim=0)
-                x_val_new = torch.cat([x_val_new, inputs], dim=0)
         for batch_idx, (inputs, targets) in enumerate(testloader):
             if batch_idx == 0:
                 x_tst = inputs
                 y_tst = targets
-                x_tst_new = inputs.view(tst_batch_size, -1)
             else:
                 x_tst = torch.cat([x_tst, inputs], dim=0)
                 y_tst = torch.cat([y_tst, targets], dim=0)
-                x_tst_new = torch.cat([x_tst_new, inputs], dim=0)
                 
         self.x_trn = x_trn
         self.y_trn = y_trn
@@ -183,7 +179,7 @@ class GlisterOnline():
         total_idxs = list(np.arange(len(self.y_trn)))
         
         # Set GreedyDSS model
-        setf_model = SetFunction(self.trainset, self.x_val, self.y_val, model, criterion,
+        setf_model = SetFunctionImage(self.trainset, self.x_val, self.y_val, model, criterion,
                                  criterion_nored, learning_rate, self.device, self.n_channels, 
                                  self.num_classes, self.dss_batch_size)
         
@@ -202,7 +198,7 @@ class GlisterOnline():
                                                                             drop_last = True))]
             subtrn_loss = 0
             for batch_idx in batch_wise_indices:
-                inputs = torch.cat([self.fullset[x][0].reshape(1, -1) for x in batch_idx], dim=0).type(torch.float)
+                inputs = torch.cat([self.fullset[x][0].reshape(-1, self.n_channels, self.fullset[x][0].shape[1], self.fullset[x][0].shape[2]) for x in batch_idx], dim=0).type(torch.float)
                 targets = torch.tensor([self.fullset[x][1] for x in batch_idx])
                 inputs, targets = inputs.to(self.device), targets.to(self.device, non_blocking=True)
                 optimizer.zero_grad()

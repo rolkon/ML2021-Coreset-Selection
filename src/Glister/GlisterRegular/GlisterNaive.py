@@ -1,6 +1,7 @@
 # General imports
 import copy, datetime, os, subprocess, sys, time, math
 import numpy as np
+sys.path.append(".")
 
 # Everything torch-related
 import torch
@@ -14,9 +15,9 @@ import torchvision
 import torch.nn.functional as F
 
 # Custom classes
-from set_function_image import SetFunctionImage
+from .set_function import SetFunction
 
-class GlisterOnlineImage():
+class GlisterNaive():
     
     def __init__(self, fullset = None, valset = None, testset = None, 
                  device = 'cpu', validation_set_fraction = 0.1,
@@ -96,11 +97,10 @@ class GlisterOnlineImage():
         
         # Transform to tensors
         trainset_idxs = np.array(trainset.indices)
-        batch_wise_indices = list(BatchSampler(SequentialSampler(trainset_idxs), trn_batch_size, drop_last=False))
+        batch_wise_indices = list(BatchSampler(SequentialSampler(trainset_idxs), 1000, drop_last=False))
         cnt = 0
         for batch_idx in batch_wise_indices:
-            # HERE
-            inputs = torch.cat([fullset[x][0].reshape(-1, self.n_channels, self.fullset[x][0].shape[1], self.fullset[x][0].shape[2]) for x in batch_idx], dim=0).type(torch.float)
+            inputs = torch.cat([fullset[x][0].reshape(1, -1) for x in batch_idx], dim=0).type(torch.float)
             targets = torch.tensor([fullset[x][1] for x in batch_idx])
             if cnt == 0:
                 x_trn = inputs
@@ -179,7 +179,7 @@ class GlisterOnlineImage():
         total_idxs = list(np.arange(len(self.y_trn)))
         
         # Set GreedyDSS model
-        setf_model = SetFunctionImage(self.trainset, self.x_val, self.y_val, model, criterion,
+        setf_model = SetFunction(self.trainset, self.x_val, self.y_val, model, criterion,
                                  criterion_nored, learning_rate, self.device, self.n_channels, 
                                  self.num_classes, self.dss_batch_size)
         
@@ -198,7 +198,7 @@ class GlisterOnlineImage():
                                                                             drop_last = True))]
             subtrn_loss = 0
             for batch_idx in batch_wise_indices:
-                inputs = torch.cat([self.fullset[x][0].reshape(-1, self.n_channels, self.fullset[x][0].shape[1], self.fullset[x][0].shape[2]) for x in batch_idx], dim=0).type(torch.float)
+                inputs = torch.cat([self.fullset[x][0].reshape(1, -1) for x in batch_idx], dim=0).type(torch.float)
                 targets = torch.tensor([self.fullset[x][1] for x in batch_idx])
                 inputs, targets = inputs.to(self.device), targets.to(self.device, non_blocking=True)
                 optimizer.zero_grad()

@@ -133,7 +133,7 @@ class SetFunction(object):
                 grads_currX = self.grads_per_elem[bestId]  # Making it a list so that is mutable!
             # Update the grads_val_current using current greedySet grads
             self._update_grads_val(theta_init, grads_currX)
-            if numSelected % 1000 == 0:
+            if numSelected % 100 == 0:
                 # Printing bestGain and Selection time for 1 element.
                 print("numSelected:", numSelected, "Time for 1:", time.time() - t_one_elem)
             numSelected += 1
