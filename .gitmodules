@@ -1,3 +1,0 @@
-[submodule "src/submodules/PyTorch_CIFAR10"]
-	path = src/submodules/PyTorch_CIFAR10
-	url = git@github.com:rolkon/PyTorch_CIFAR10.git
