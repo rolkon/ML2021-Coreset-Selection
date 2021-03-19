@@ -11,10 +11,6 @@ Folder structure:
   * `greedy_k_centers` contains the implementation of the Greedy K-Centers algorithm.
   * `glister` contains the implementation of the GLISTER algorithm.
 
-### Pulling this repository
-
-This repository stores data in the Git LFS format. You need to have Git LFS installed on your computer in order to pull this repository successfully.
-
 ### Documentation
 The documentation can be found here:
 
