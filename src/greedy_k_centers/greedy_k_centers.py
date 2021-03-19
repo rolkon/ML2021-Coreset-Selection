@@ -1,3 +1,6 @@
+# implementation from
+# https://github.com/stanford-futuredata/selection-via-proxy/blob/master/svp/common/selection/k_center_greedy.py
+
 import numpy as np
 import scipy.spatial.distance
 from tqdm import tqdm

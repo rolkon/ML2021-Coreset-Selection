@@ -38,7 +38,7 @@ def generate_latent_space(dataset_type='fullset'):
         print("generate_latent_space: dataset type error: You have to choose either 'fullset' or 'subset'.")
         return
 
-    device = torch.device('cuda:1' if torch.cuda.is_available() else 'cpu')
+    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     
     if device == 'cpu':
         print("Warning: We did not detect a CUDA core. This could take a while.")
