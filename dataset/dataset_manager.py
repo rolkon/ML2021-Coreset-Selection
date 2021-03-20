@@ -36,7 +36,7 @@ def CIFAR10_subset(path, size=20000, transform=None, target_transform=None):
     >>> dataset = dataset_manager.CIFAR10_Subset(dataset_manager.__file__)
     
     """
-    dataset = CIFAR10_Full(path, train=True, transform=transform, target_transform=target_transform)
+    dataset = CIFAR10_full(path, train=True, transform=transform, target_transform=target_transform)
     
     #select uniform, seeded random sample of length <size> from the full dataset
     np.random.seed(0)
