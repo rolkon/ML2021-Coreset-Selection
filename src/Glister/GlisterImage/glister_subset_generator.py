@@ -13,7 +13,7 @@ sys.path.append('../../dataset/')
 import dataset_manager
 
 class CifarNet(torch.nn.Module):
-    def __init__(self):
+	def __init__(self):
 		super(CifarNet, self).__init__()
 		self.conv1 = torch.nn.Conv2d(3,   64,  3)
 		self.conv2 = torch.nn.Conv2d(64,  128, 3)
@@ -36,7 +36,7 @@ class CifarNet(torch.nn.Module):
 
 def generate_subset_indices(dataset_type='subset', frac_of_full_set=0.1):
 	""" Generates subset indices from the full dataset with the GLISTER method.
-    
+
 	Keyword arguments:
 	dataset_type -- Either 'fullset' to generate GLISTER indices of full dataset, or 'subset' to generate GLISTER indices of subset.
 		Warning: 'fullset' is computationally very expensive.
@@ -51,7 +51,7 @@ def generate_subset_indices(dataset_type='subset', frac_of_full_set=0.1):
 
 	if(dataset_type == 'fullset'):
 		trainset = dataset_manager.CIFAR10_full(dataset_manager.__file__, transform=transform)
-        
+
 	elif(dataset_type == 'subset'):
 		trainset = dataset_manager.CIFAR10_Subset(dataset_manager.__file__, transform=transform)
 	else:
