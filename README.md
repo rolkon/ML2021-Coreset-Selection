@@ -3,13 +3,23 @@
 This repository contains the source code of the Skoltech ML2021 course project "Core-Set Selection for Effective Data Selection".
 
 ### Structure and contents
+* `src/`
+  * `greedy_k_centers` contains the implementation of the Greedy K-Centers algorithm, with some utility functions.
+  * `Glister` contains the implementation of all GLISTER algorithms, with some utility functions.
+* `dataset/` contains a dataset manager. Since we are using CIFAR-10 throughout this repository, we unified access to the data set and wrote a data manager for maintaining access to the data set, so we don't have copies stored in every folder.
+* `results/` contains the main results of our work, together with visualization code implemented in jupyter notebooks.
+* `submodules/` contains other repositories we used, linked as submodules to this repo.
 
-All source code is implemented in jupyter-notebooks and can be found in the `src` folder. In some situations, python files are created from the notebooks to be used elsewhere, but the implementation itself is done in jupyter-notebooks. This is done to build the documentation and test environment directly around the code.
+### Getting started
+#### Dependencies
 
-Folder structure:
-* `src/` contains the source code of the project.
-  * `greedy_k_centers` contains the implementation of the Greedy K-Centers algorithm.
-  * `glister` contains the implementation of the GLISTER algorithm.
+In order to use the repository, you need to have the following packages installed:
+* `pytorch 1.8.0`
+* `torchvision 0.9.0`
+
+It is also highly recommended to use CUDA GPU cores for the training, as they are computationally very demanding.
+
+#### Commands
 
 ### Documentation
 The documentation can be found here:
