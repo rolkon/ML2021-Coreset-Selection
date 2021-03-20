@@ -53,7 +53,7 @@ Go to `src/Glister/GlisterImage` and execute the following:
 >>> from glister_coreset_generator import generate_coreset_indices
 >>> generate_coreset_indices(dataset_type='subset', frac_of_full_set=0.1)
 ```
-Again, you can choose between 'fullset' and 'subset'. In our experience, we only used 'subset', as generating the GLISTER indices on the full set was unfeasible. Also, in GLISTER, `frac_of_full_set` only allows 3 settings: `0.1`, `0.3` and `0.5`.
+Again, you can choose between `fullset` and `subset`. In our experience, we only used `subset`, as generating the GLISTER indices on the full set was unfeasible. Also, in GLISTER, `frac_of_full_set` only allows 3 settings: `0.1`, `0.3` and `0.5`.
 
 For both Greedy K-Centers and GLISTER, the resulting core-sets will be saved as CSV files directly in the same directory.
 
@@ -67,8 +67,8 @@ Go to `src/experiments/models_generalization` and execute the following:
 >>> from training_utilities import train_and_save_model
 >>> train_and_save_model(model_name='resnet', coreset_selector='k-centers', coreset_percentage='0.1', trainset_size='subset', device='cuda')
 ```
-* `model_name` lets you choose between `resnet`, `mobilenet`, `vgg` and `densenet`.
-* `coreset_selector` accepts `glister`, `k-centers` and `random`.
+* `model_name` lets you choose between `resnet`, `mobilenet`, `vgg` and `densenet`
+* `coreset_selector` accepts `glister`, `k-centers` and `random`
 * `coreset_percentage` accepts `0.1`, `0.3` and `0.5`
 * `trainset_size` can be `fullset` or `subset`, as above
 * `device` lets you select the device for the training. We would strongly recommend only executing this command if you have a CUDA core available.
