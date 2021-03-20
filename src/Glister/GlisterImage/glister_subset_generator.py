@@ -8,8 +8,8 @@ import torch.utils.data as torch_data
 import torchvision.transforms as transforms
 
 from GlisterImage import GlisterOnlineImage
-
-sys.path.append('../../dataset/')
+import sys
+sys.path.append('../../../dataset/')
 import dataset_manager
 
 class CifarNet(torch.nn.Module):
@@ -53,7 +53,7 @@ def generate_subset_indices(dataset_type='subset', frac_of_full_set=0.1):
 		trainset = dataset_manager.CIFAR10_full(dataset_manager.__file__, transform=transform)
 
 	elif(dataset_type == 'subset'):
-		trainset = dataset_manager.CIFAR10_Subset(dataset_manager.__file__, transform=transform)
+		trainset = dataset_manager.CIFAR10_subset(dataset_manager.__file__, transform=transform)
 	else:
 		print("glister: generate_subset_indices: dataset type error: You have to choose either 'fullset' or 'subset'.")
 		return
@@ -63,11 +63,16 @@ def generate_subset_indices(dataset_type='subset', frac_of_full_set=0.1):
 	fullset = trainset
 	valset = trainset
 
+	device = torch.device('cuda:1' if torch.cuda.is_available() else 'cpu')
+
+	if device == 'cpu':
+		print("Warning: We did not detect a CUDA core. This could take a while.")
+
 	glister = GlisterOnlineImage(
 	fullset = fullset,
 	valset = valset,
 	testset = testset,
-	device = "cpu",
+	device = device,
 	validation_set_fraction = 0.1,
 	trn_batch_size = 128,
 	val_batch_size = 256,

@@ -14,7 +14,7 @@ import torchvision
 import torch.nn.functional as F
 
 # Custom classes
-from .set_function_image import SetFunctionImage
+from set_function_image import SetFunctionImage
 
 class GlisterOnlineImage():
     
