@@ -89,14 +89,20 @@ def __get_datasubset(indices):
         train=True,
         transform=transform
     )
+    
+    test_dataset = dataset_manager.CIFAR10_full(
+        dataset_manager.__file__,
+        train=False,
+        transform=transform
+    )
 
-    return train_dataset[indices]
+    return [train_dataset[i] for i in indices], test_dataset
 
 
 def train_and_save_models(models, model_names, train_indices, percentage_of_dataset, selector_name=None):
     """Trains every model in <models> input array and saves resulting weights. Uses other parameters to generate verbose console outputs during training."""
     
-    train_datasubset = __get_datasubset(train_indices)
+    train_datasubset, test_dataset = __get_datasubset(train_indices)
     
     # Data loader
     train_loader = torch.utils.data.DataLoader(dataset=train_datasubset,
@@ -112,7 +118,7 @@ def train_and_save_models(models, model_names, train_indices, percentage_of_data
                                              )
     
     # Device configuration
-    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+    device = torch.device('cuda:1' if torch.cuda.is_available() else 'cpu')
     
     # Training parameters
     num_epochs = 100
@@ -143,7 +149,7 @@ def train_and_save_models(models, model_names, train_indices, percentage_of_data
             max_epochs = total_steps)
 
         # Train the model
-        accuracies = train_model(num_epochs, model, label, criterion, optimizer, train_loader, test_loader, percentage_of_dataset, selector_name, scheduler=scheduler, verbose=True, device=device)
+        accuracies = train_model_epochs(num_epochs, model, label, criterion, optimizer, train_loader, test_loader, percentage_of_dataset, selector_name, scheduler=scheduler, verbose=True, device=device)
         
         # take model as parameter, not cacluclate it
         # percentage_of_dataset = np.round((len(train_datasubset)/len(train_dataset))*100).astype(int)
