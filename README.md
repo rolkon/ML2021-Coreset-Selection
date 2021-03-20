@@ -31,7 +31,7 @@ Go to `src/greedy_k_centers` and execute the following:
 ```
 With the parameter, either 'fullset' or 'subset' can be selected. This creates the latent space either from the full CIFAR-10 dataset (50'000 samples), or from the subset (20'000 samples). The result is saved in a CSV file in the same directory.
 
-The resulting file will be several hundets of Megabytes in size, that's why it is not included in this repository. It can be transferred upon request.
+The resulting file will be several hundets of Megabytes in size, that's why it is not included in this repository. It can be might be added upon request.
 
 ### Creating core-set indices
 #### Greedy K-Centers
