@@ -198,7 +198,11 @@ def train_and_save_model(model_name = 'resnet',
             train_indices = np.loadtxt('../../greedy_k_centers/k_centers_indices_{}.csv'.format(trainset_size), delimiter=',')[:int(len(train_dataset)*coreset_percentage)].astype(int)
 
         elif coreset_selector=='random':
-            train_indices = dataset_manager.CIFAR10_subset_indices()
+            if trainset_size == 'subset':
+                train_indices = dataset_manager.CIFAR10_subset_indices()
+            else:
+                train_indices = np.arange(0, len(train_dataset))
+
             train_indices = np.random.choice(train_indices, size=int(len(train_dataset)*coreset_percentage), replace=False)
         else:
             print("Coreset selector not supported. Must be either 'glister', 'k-centers' or 'random'.")
@@ -206,6 +210,7 @@ def train_and_save_model(model_name = 'resnet',
             
         train_dataset = [train_dataset[i] for i in train_indices]
         
+    print("Size of selected dataset: ", len(train_dataset))
         
     # Data loader
     train_loader = torch.utils.data.DataLoader(dataset=train_dataset,
@@ -252,17 +257,16 @@ def train_and_save_model(model_name = 'resnet',
         max_epochs = total_steps)
 
     # Train the model
-    accuracies = __train_model_epochs(num_epochs, model, model_name, criterion, optimizer, train_loader, test_loader, percentage_of_dataset, selector_name, scheduler=scheduler, verbose=True, device=device)
+    accuracies = __train_model_epochs(num_epochs, model, model_name, criterion, optimizer, train_loader, test_loader, str(int(coreset_percentage * 100)), coreset_selector, scheduler=scheduler, verbose=True, device=device)
 
     # take model as parameter, not cacluclate it
-    # percentage_of_dataset = np.round((len(train_datasubset)/len(train_dataset))*100).astype(int)
 
-    if selector_name == None:
-        weights_filename = 'model_weights/{:03}_{}.pt'.format(percentage_of_dataset, model_name)
-        results_filename = 'accuracy_results/{:03}_{}.csv'.format(percentage_of_dataset, model_name)
+    if coreset_selector == None:
+        weights_filename = 'model_weights/{:03}_{}_{}.pt'.format(int(coreset_percentage*100), model_name, trainset_size)
+        results_filename = 'accuracy_results/{:03}_{}_{}.csv'.format(int(coreset_percentage*100), model_name, trainset_size)
     else:
-        weights_filename = 'model_weights/{:03}_{}_{}.pt'.format(percentage_of_dataset, model_name, selector_name)
-        results_filename = 'accuracy_results/{:03}_{}_{}.csv'.format(percentage_of_dataset, model_name, selector_name)
+        weights_filename = 'model_weights/{:03}_{}_{}_{}.pt'.format(int(coreset_percentage*100), model_name, coreset_selector, trainset_size)
+        results_filename = 'accuracy_results/{:03}_{}_{}_{}.csv'.format(int(coreset_percentage*100), model_name, coreset_selector, trainset_size)
     torch.save(model.state_dict(), weights_filename)
 
     np.savetxt(results_filename, accuracies, delimiter=',')
