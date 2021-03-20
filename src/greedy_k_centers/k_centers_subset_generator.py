@@ -48,4 +48,4 @@ def generate_subset_indices(dataset_type='fullset', frac_of_full_set=0.5):
     filename = 'k_centers_indices.csv'
     
     print("Saving ", filename, "...")
-    np.savetxt('k_centers_indices.csv', indices, delimiter=',')
+    np.savetxt('k_centers_indices_{}.csv'.format(dataset_type), indices, delimiter=',')

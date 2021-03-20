@@ -93,5 +93,5 @@ def generate_subset_indices(dataset_type='subset', frac_of_full_set=0.1):
 
 	indices = np.array(idxs)
 
-	np.savetxt('indices/glister_indices_{}.csv'.format(int(frac_of_full_set*100)), indices, delimiter=',')
+	np.savetxt('indices/glister_indices_{}_{}.csv'.format(dataset_type, int(frac_of_full_set*100)), indices, delimiter=',')
 
