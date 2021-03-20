@@ -29,7 +29,9 @@ Go to `src/greedy_k_centers` and execute the following:
 >>> from latent_space_generator import generate_latent_space
 >>> generate_latent_space(dataset_type='fullset')
 ```
-With the parameter, either 'fullset' or 'subset' can be selected. This creates the latent space either from the full CIFAR-10 dataset (50'000 samples), or from the subset (20'000 samples). The result is saved in a CSV file.
+With the parameter, either 'fullset' or 'subset' can be selected. This creates the latent space either from the full CIFAR-10 dataset (50'000 samples), or from the subset (20'000 samples). The result is saved in a CSV file in the same directory.
+
+The resulting file will be several hundets of Megabytes in size, that's why it is not included in this repository. It can be transferred upon request.
 
 ### Creating core-set indices
 #### Greedy K-Centers
@@ -37,8 +39,8 @@ To do this, make sure you have the latent space created.
 
 Go to `src/greedy_k_centers` and execute the following:
 ```python
->>> from k_centers_subset_generator import generate_subset_indices
->>> generate_subset_indices(dataset_type='fullset', frac_of_full_set=0.5)
+>>> from k_centers_coreset_generator import generate_coreset_indices
+>>> generate_coreset_indices(dataset_type='fullset', frac_of_full_set=0.5)
 ```
 As with the latent space creation, you can either create the core-set for the full CIFAR-10 data set (50'000), or for the data subset (20'000).
 
@@ -46,10 +48,38 @@ The `frac_of_full_set` parameter describes the size of the core-set with regards
 
 #### GLISTER
 
-### Training models
+Go to `src/Glister/GlisterImage` and execute the following:
+```python
+>>> from glister_coreset_generator import generate_coreset_indices
+>>> generate_coreset_indices(dataset_type='subset', frac_of_full_set=0.1)
+```
+Again, you can choose between 'fullset' and 'subset'. In our experience, we only used 'subset', as generating the GLISTER indices on the full set was unfeasible. Also, in GLISTER, `frac_of_full_set` only allows 3 settings: `0.1`, `0.3` and `0.5`.
 
-## Documentation
-The documentation can be found here:
+For both Greedy K-Centers and GLISTER, the resulting core-sets will be saved as CSV files directly in the same directory.
+
+### Training models
+If you have generated the core-set indices of either Greedy K-Center, GLISTER, or both, you can train models and check the achieved accuracy.
+
+For this, the models from the `submodules/PyTorch_CIFAR10` submodule will be used.
+
+Go to `src/experiments/models_generalization` and execute the following:
+```python
+>>> from training_utilities import train_and_save_model
+>>> train_and_save_model(model_name='resnet', coreset_selector='k-centers', coreset_percentage='0.1', trainset_size='subset', device='cuda')
+```
+* `model_name` lets you choose between `resnet`, `mobilenet`, `vgg` and `densenet`.
+* `coreset_selector` accepts `glister`, `k-centers` and `random`.
+* `coreset_percentage` accepts `0.1`, `0.3` and `0.5`
+* `trainset_size` can be `fullset` or `subset`, as above
+* `device` lets you select the device for the training. We would strongly recommend only executing this command if you have a CUDA core available.
+
+This function trains the model in a very verbose way. The resulting accuracies over the 100 epochs are logged in `accuracy_results/`.
+
+### Working with Jupyter Notebooks
+Some jupyter notebooks are sprinkled across this repository, as we like to work with them for visualization and interactive purposes. If you want to use them, we'd suggest launching the notebook in the root of the repository, as to not break any path dependencies that might be there.
+
+## Report
+The report for this project can be found here:
 
 https://www.overleaf.com/7232121456hvjtgyvnfwcd
 
