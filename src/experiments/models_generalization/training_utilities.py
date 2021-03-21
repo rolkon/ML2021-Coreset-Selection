@@ -198,10 +198,7 @@ def train_and_save_model(model_name = 'resnet',
             train_indices = np.loadtxt('../../greedy_k_centers/k_centers_indices_{}.csv'.format(trainset_size), delimiter=',')[:int(len(train_dataset)*coreset_percentage)].astype(int)
 
         elif coreset_selector=='random':
-            if trainset_size == 'subset':
-                train_indices = dataset_manager.CIFAR10_subset_indices()
-            else:
-                train_indices = np.arange(0, len(train_dataset))
+            train_indices = np.arange(0, len(train_dataset))
 
             train_indices = np.random.choice(train_indices, size=int(len(train_dataset)*coreset_percentage), replace=False)
         else:
