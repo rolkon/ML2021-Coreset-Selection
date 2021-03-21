@@ -34,7 +34,7 @@ class CifarNet(torch.nn.Module):
 		return x
 
 
-def generate_subset_indices(dataset_type='subset', frac_of_full_set=0.1):
+def generate_coreset_indices(dataset_type='subset', frac_of_full_set=0.1):
 	""" Generates subset indices from the full dataset with the GLISTER method.
 
 	Keyword arguments:
