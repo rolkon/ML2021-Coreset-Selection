@@ -3,3 +3,4 @@ __pycache__
 cifar/
 cifar-10-batches-py/
 *.tar.gz
+.DS_Store
