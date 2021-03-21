@@ -91,34 +91,6 @@ def __train_model_epochs(epochs,
             
     return accuracies
 
-def __get_datasubset(indices):
-    #factors selected from torch docs
-    mean = (0.4914, 0.4822, 0.4465)
-    std = (0.2471, 0.2435, 0.2616)
-
-    #preprocessing
-    transform = transforms.Compose([
-        transforms.RandomCrop(32, padding=4),
-        transforms.RandomHorizontalFlip(),
-        transforms.ToTensor(),
-        transforms.Normalize(mean, std)
-    ])
-        
-    train_dataset = dataset_manager.CIFAR10_full(
-        dataset_manager.__file__,
-        train=True,
-        transform=transform
-    )
-    
-    test_dataset = dataset_manager.CIFAR10_full(
-        dataset_manager.__file__,
-        train=False,
-        transform=transform
-    )
-
-    return [train_dataset[i] for i in indices], test_dataset
-
-
 def train_and_save_model(model_name = 'resnet',
                          coreset_selector = 'k-centers',
                          coreset_percentage = 0.1,
@@ -204,7 +176,7 @@ def train_and_save_model(model_name = 'resnet',
         else:
             print("Coreset selector not supported. Must be either 'glister', 'k-centers' or 'random'.")
             return
-            
+        
         train_dataset = [train_dataset[i] for i in train_indices]
         
     print("Size of selected dataset: ", len(train_dataset))
