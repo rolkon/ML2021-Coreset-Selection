@@ -50,10 +50,10 @@ def __get_data():
 
     return data
 
-def plot_generalization_ability():
+def plot_generalization_ability(height, width):
     data = __get_data()
 
-    fig = plt.figure(figsize=(10, 10))
+    fig = plt.figure(figsize=(height, width))
     gs = fig.add_gridspec(3, hspace=0.25)
 
     axes = gs.subplots(sharex=True, sharey=True)
@@ -95,14 +95,14 @@ def plot_generalization_ability():
 
         axes[i].label_outer()
 
-    plt.savefig('generalization_ability.eps', bbox_inches= 'tight')
-    plt.savefig('generalization_ability.png', dpi=100, bbox_inches='tight')
+    plt.savefig('generalization_ability_{}x{}.eps'.format(height, width), bbox_inches= 'tight')
+    plt.savefig('generalization_ability_{}x{}.png'.format(height, width), dpi=100, bbox_inches='tight')
 
 
-def plot_accuracy_comparison():
+def plot_accuracy_comparison(height, width):
     data = __get_data()
 
-    fig = plt.figure(figsize=(10, 10))
+    fig = plt.figure(figsize=(height, width))
     gs = fig.add_gridspec(4, hspace=0.25)
 
     axes = gs.subplots(sharex=True, sharey=True)
@@ -141,8 +141,8 @@ def plot_accuracy_comparison():
 
         axes[i].label_outer()
 
-    plt.savefig('generalization_accuracy_comparison.eps', bbox_inches= 'tight')
-    plt.savefig('generalization_accuracy_comparison.png', dpi=100, bbox_inches='tight')
+    plt.savefig('generalization_accuracy_comparison_{}x{}.eps'.format(height, width), bbox_inches= 'tight')
+    plt.savefig('generalization_accuracy_comparison_{}x{}.png'.format(height, width), dpi=100, bbox_inches='tight')
 
 
 def plot_accuracies_per_selector(selector):
