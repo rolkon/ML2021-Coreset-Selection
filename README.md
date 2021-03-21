@@ -4,7 +4,7 @@ This repository contains the source code of the Skoltech ML2021 course project "
 
 ## Abstract
 
-Core-set selection techniques aim to select a subset of a given training data set, with the goal of maximizing the subsets utility in training a neural network. In this repository, we analyze the core-set selection methods **GLISTER-ONLINE** and **Greedy K-Centers** and compare them to a random core-set selection as the baseline quality measure. We replicated the results of previous papers and studied how well the produced core-sets generalize across different deep neural network architectures. In our findings, the tested core-set algorithms produced core-sets that were well generalizable across multiple neural networks. Furthermore, no significant accuracy gains could be achieved by using \verb|GLISTER-ONLINE| or \verb|Greedy K-Centers| over random core-set sampling.
+Core-set selection techniques aim to select a subset of a given training data set, with the goal of maximizing the subsets utility in training a neural network. In this repository, we analyze the core-set selection methods **GLISTER-ONLINE** and **Greedy K-Centers** and compare them to a random core-set selection as the baseline quality measure. We replicated the results of previous papers and studied how well the produced core-sets generalize across different deep neural network architectures. In our findings, the tested core-set algorithms produced core-sets that were well generalizable across multiple neural networks. Furthermore, no significant accuracy gains could be achieved by using **GLISTER-ONLINE** or **Greedy K-Centers** over random core-set sampling.
 
 ## Structure and contents
 * `src/`
