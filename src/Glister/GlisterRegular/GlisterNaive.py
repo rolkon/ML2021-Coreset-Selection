@@ -1,3 +1,10 @@
+## This script contain implementation of GlisterNaive class.
+## This class is adopted from https://github.com/dssresearch/GLISTER/blob/master/dss_deep.py
+## The changes concern the organization of code into a class and handling of data shapes.
+## If you encounter problems with shapes, the problem may be in our code, otherwise, 
+## look at the original repository.
+## Adapted by Knowhere team, Skoltech 2021.
+
 # General imports
 import copy, datetime, os, subprocess, sys, time, math
 import numpy as np
@@ -46,13 +53,26 @@ class GlisterNaive():
             Sizes of train, validation, test, dss batch sizes.
         
         model: nn.Module
-            Model to use.
+            NN model to use.
+
+        num_epochs: int
+            Number of epochs.
+
+        learning_rate: float
+            Learning rate.
+
+        num_classes: int
+            Number of classes in target.
+
+        n_channels: int
+            Meaningless, added for compatibility with GlisterImage.
         
         bud: int
             Budget.
         
         lam: float
             Lambda.
+
         '''
         
         # Set "global" variable

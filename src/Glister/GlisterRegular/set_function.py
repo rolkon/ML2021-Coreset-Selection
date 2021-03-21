@@ -1,3 +1,10 @@
+## This script contain implementation of SetFunction class, which is a version of GreedyDSS algorithm.
+## This class is adopted from https://github.com/dssresearch/GLISTER/blob/master/models/set_function_grad_computation_taylor.py
+## The changes concern the handling of data shapes.
+## If you encounter problems with shapes, the problem may be in our code, otherwise, 
+## look at the original repository.
+## Adapted by Knowhere team, Skoltech 2021.
+
 import numpy as np
 import time
 import torch
@@ -14,10 +21,9 @@ class SetFunction(object):
         self.x_val = x_val.to(device)
         self.y_val = y_val.to(device)
         self.model = model
-        self.loss = loss_criterion  # Make sure it has reduction='none' instead of default
+        self.loss = loss_criterion
         self.loss_nored = loss_nored
-        self.eta = eta  # step size for the one step gradient update
-        # self.opt = optimizer
+        self.eta = eta
         self.device = device
         self.N_trn = len(trainset)
         self.grads_per_elem = None
@@ -26,10 +32,13 @@ class SetFunction(object):
         self.num_classes = num_classes
         self.batch_size = batch_size
 
+    # Calculate per-element gradients
     def _compute_per_element_grads(self, theta_init):
+
         self.model.load_state_dict(theta_init)
         batch_wise_indices = np.array([list(BatchSampler(SequentialSampler(np.arange(self.N_trn)), self.batch_size, drop_last=False))][0])
         cnt = 0
+
         for batch_idx in batch_wise_indices:
             inputs = torch.cat([self.trainset[x][0].reshape(1, -1) for x in batch_idx], dim=0).type(torch.float)
             targets = torch.tensor([self.trainset[x][1] for x in batch_idx])
@@ -50,12 +59,14 @@ class SetFunction(object):
                 outputs = torch.cat((outputs, tmp_tensor), dim=0)
         grads_vec = data - outputs
         torch.cuda.empty_cache()
-        #print("Per Element Gradient Computation is Completed")
+
         self.grads_per_elem = grads_vec
 
+    # Update validation gradients
     def _update_grads_val(self, theta_init, grads_currX=None, first_init=False):
         self.model.load_state_dict(theta_init)
         self.model.zero_grad()
+
         if first_init:
             with torch.no_grad():
                 scores = F.softmax(self.model(self.x_val), dim=1)
@@ -73,6 +84,7 @@ class SetFunction(object):
                 one_hot_label.scatter_(1, self.y_val.view(-1, 1), 1)
                 grads = scores - one_hot_label
         self.grads_val_curr = grads.mean(dim=0)  # reset parm.grads to zero!
+
 
     def eval_taylor(self, grads_elem, theta_init):
         grads_val = self.grads_val_curr
@@ -98,34 +110,39 @@ class SetFunction(object):
         grads_e = self.grads_per_elem[element]
         grads_X += grads_e
 
-    # Same as before i.e full batch case! No use of dataloaders here!
-    # Everything is abstracted away in eval call
+    # Main function, implementation of DSS
     def naive_greedy_max(self, budget, theta_init):
-        start_time = time.time()
+
+        # Compute per-element gradients
         self._compute_per_element_grads(theta_init)
-        end_time = time.time()
-        #print("Per Element gradient computation time is: ", end_time - start_time)
-        start_time = time.time()
+
+        # Update validation gradients
         self._update_grads_val(theta_init, first_init=True)
-        end_time = time.time()
-        #print("Updated validation set gradient computation time is: ", end_time - start_time)
-        # Dont need the trainloader here!! Same as full batch version!
+
         numSelected = 0
         grads_currX = []  # basically stores grads_X for the current greedy set X
         greedySet = list()
         remainSet = list(range(self.N_trn))
-        t_ng_start = time.time()  # naive greedy start time
         subset_size = int((len(self.grads_per_elem) / budget) * math.log(100))
+
         while (numSelected < budget):
-            # Try Using a List comprehension here!
+            
             t_one_elem = time.time()
+
+            # Select subset
             subset_selected = list(np.random.choice(np.array(list(remainSet)), size=subset_size, replace=False))
+
+            # Calculate gradients
             rem_grads = [self.grads_per_elem[x].view(1, self.grads_per_elem[0].shape[0]) for x in subset_selected]
+            
+            # Calculate gains
             gains = self.eval_taylor_modular(rem_grads, theta_init)
+            
             # Update the greedy set and remaining set
             bestId = subset_selected[torch.argmax(gains)]
             greedySet.append(bestId)
             remainSet.remove(bestId)
+            
             # Update info in grads_currX using element=bestId
             if numSelected > 0:
                 self._update_gradients_subset(grads_currX, bestId)
@@ -137,5 +154,5 @@ class SetFunction(object):
                 # Printing bestGain and Selection time for 1 element.
                 print("numSelected:", numSelected, "Time for 1:", time.time() - t_one_elem)
             numSelected += 1
-        #print("Naive greedy total time:", time.time() - t_ng_start)
+
         return list(greedySet), grads_currX

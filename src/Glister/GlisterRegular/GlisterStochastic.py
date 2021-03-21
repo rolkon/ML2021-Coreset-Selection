@@ -1,3 +1,11 @@
+## This script contain implementation of GlisterStochasticReg and GlisterStochasticNoReg classes.
+## These classes are adopted from https://github.com/dssresearch/GLISTER/blob/master/dss_deep.py
+## The changes concern the organization of code into a class, handling of data shapes, and setting of initial indexes. 
+## If you encounter problems with shapes, the problem may be in our code, otherwise, 
+## look at the original repository.
+## Adapted by Knowhere team, Skoltech 2021.
+
+
 # General imports
 import copy, datetime, os, subprocess, sys, time, math, random
 import numpy as np
@@ -22,9 +30,9 @@ class GlisterStochasticReg():
                  device = 'cpu', validation_set_fraction = 0.1,
                  trn_batch_size = 20, val_batch_size = 20, tst_batch_size = 20, dss_batch_size = 20,
                  model = None, num_epochs = 200, learning_rate = 1.0, num_classes = None, n_channels = 1,
-                 bud = 100, lam = 0.1, r=100):
+                 bud = 100, lam = 0.1):
         '''
-        Attributes:
+         Attributes:
         ------
         fullset: torch_data.Dataset
             Training set.
@@ -45,7 +53,19 @@ class GlisterStochasticReg():
             Sizes of train, validation, test, dss batch sizes.
         
         model: nn.Module
-            Model to use.
+            NN model to use.
+
+        num_epochs: int
+            Number of epochs.
+
+        learning_rate: float
+            Learning rate.
+
+        num_classes: int
+            Number of classes in target.
+
+        n_channels: int
+            Meaningless, added for compatibility with GlisterImage.
         
         bud: int
             Budget.
@@ -71,7 +91,6 @@ class GlisterStochasticReg():
         self.n_channels = n_channels
         self.bud = bud
         self.lam = lam
-        self.r = r
         
         # Separate train, validation, test sets
         num_fulltrn = len(fullset)
@@ -313,9 +332,9 @@ class GlisterStochasticNoReg():
                  device = 'cpu', validation_set_fraction = 0.1,
                  trn_batch_size = 20, val_batch_size = 20, tst_batch_size = 20, dss_batch_size = 20,
                  model = None, num_epochs = 200, learning_rate = 1.0, num_classes = None, n_channels = 1,
-                 bud = 100, r=100):
+                 bud = 100):
         '''
-        Attributes:
+         Attributes:
         ------
         fullset: torch_data.Dataset
             Training set.
@@ -336,11 +355,25 @@ class GlisterStochasticNoReg():
             Sizes of train, validation, test, dss batch sizes.
         
         model: nn.Module
-            Model to use.
+            NN model to use.
+
+        num_epochs: int
+            Number of epochs.
+
+        learning_rate: float
+            Learning rate.
+
+        num_classes: int
+            Number of classes in target.
+
+        n_channels: int
+            Meaningless, added for compatibility with GlisterImage.
         
         bud: int
             Budget.
         
+        lam: float
+            Lambda.
         '''
         
         # Set "global" variable

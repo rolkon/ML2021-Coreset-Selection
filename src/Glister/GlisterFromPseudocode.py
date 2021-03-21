@@ -1,3 +1,7 @@
+## This script contain implementation of the Glister approach from pseudocode.
+## Model definition was adapted from here: https://github.com/dssresearch/GLISTER/blob/master/models/simpleNN_net.py
+## Created by Knowhere team, Skoltech 2021.
+
 import pandas as pd
 import numpy as np
 import torch
