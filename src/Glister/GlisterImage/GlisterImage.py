@@ -1,3 +1,11 @@
+## This script contain implementation of GlisterOnlineImage class.
+## This class is adopted from https://github.com/dssresearch/GLISTER/blob/master/dss_deep.py
+## The changes concern the organization of code into a class and handling of data shapes.
+## If you encounter problems with shapes, the problem may be in our code, otherwise, 
+## look at the original repository.
+## Adapted by Knowhere team, Skoltech 2021.
+
+
 # General imports
 import copy, datetime, os, subprocess, sys, time, math
 import numpy as np
@@ -14,7 +22,7 @@ import torchvision
 import torch.nn.functional as F
 
 # Custom classes
-from set_function_image import SetFunctionImage
+from .set_function_image import SetFunctionImage
 
 class GlisterOnlineImage():
     
@@ -45,13 +53,26 @@ class GlisterOnlineImage():
             Sizes of train, validation, test, dss batch sizes.
         
         model: nn.Module
-            Model to use.
+            NN model to use.
+
+        num_epochs: int
+            Number of epochs.
+
+        learning_rate: float
+            Learning rate.
+
+        num_classes: int
+            Number of classes in target.
+
+        n_channels: int
+            Number of channels in images.
         
         bud: int
             Budget.
         
         lam: float
             Lambda.
+
         '''
         
         # Set "global" variable
@@ -99,7 +120,6 @@ class GlisterOnlineImage():
         batch_wise_indices = list(BatchSampler(SequentialSampler(trainset_idxs), trn_batch_size, drop_last=False))
         cnt = 0
         for batch_idx in batch_wise_indices:
-            # HERE
             inputs = torch.cat([fullset[x][0].reshape(-1, self.n_channels, self.fullset[x][0].shape[1], self.fullset[x][0].shape[2]) for x in batch_idx], dim=0).type(torch.float)
             targets = torch.tensor([fullset[x][1] for x in batch_idx])
             if cnt == 0:
