@@ -9,7 +9,7 @@ Core-set selection techniques aim to select a subset of a given training data se
 ## Structure and contents
 * `src/`
   * `greedy_k_centers` contains the implementation of the Greedy K-Centers algorithm taken from the original [paper](https://github.com/stanford-futuredata/selection-via-proxy) we based our work on, and added some utility functions.
-  * `Glister` contains the implementation of all GLISTER algorithms. We extracted one solution from the code of the original [paper](https://github.com/dssresearch/GLISTER) and implemented one from pseudocode. We also added some utility functions.
+  * `Glister` contains the implementation of all GLISTER algorithms. We extracted one solution from the code of the original [paper](https://github.com/dssresearch/GLISTER) and implemented one from pseudocode given in the original [paper](https://github.com/dssresearch/GLISTER). We also added some utility functions.
 * `dataset/` contains a data manager. Since we are using CIFAR-10 throughout this repository, we unified access to the data set and wrote a data manager for maintaining access to the data set, so we don't have copies stored in every folder.
 * `results/` contains the main results of our measurements, together with visualization code that we implemented in jupyter notebooks.
 * `submodules/` contains other repositories we used, linked as submodules to this repo.
